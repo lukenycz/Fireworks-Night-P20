@@ -58,6 +58,12 @@ class GameScene: SKScene {
         
         node.run(move)
         
-        
+        if let emitter = SKEmitterNode(fileNamed: "fuse") {
+            emitter.position = CGPoint(x: 0, y: -22)
+            node.addChild(emitter)
+        }
+        fireworks.append(node)
+        addChild(node)
+
     }
 }
