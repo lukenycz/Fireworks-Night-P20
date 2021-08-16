@@ -33,7 +33,7 @@ class GameScene: SKScene {
         gameTimer =  Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
     }
     
-    @objc func launchFireworks(xMovement: CGFloat, x: Int, y: Int) {
+    @objc func createFireworks(xMovement: CGFloat, x: Int, y: Int) {
         let node = SKNode()
         node.position = CGPoint(x: x, y: y)
         
@@ -65,5 +65,39 @@ class GameScene: SKScene {
         fireworks.append(node)
         addChild(node)
 
+    }
+    @objc func launchFireworks() {
+        let movement : CGFloat = 1800
+        
+        switch Int.random(in: 0...3) {
+        case 0:
+            createFireworks(xMovement: 0, x: 512, y: bottomEdge)
+            createFireworks(xMovement: 0, x: 512 - 200, y: bottomEdge)
+            createFireworks(xMovement: 0, x: 512 - 100, y: bottomEdge)
+            createFireworks(xMovement: 0, x: 512 + 100, y: bottomEdge)
+            createFireworks(xMovement: 0, x: 512 + 200, y: bottomEdge)
+
+        case 1:
+            createFireworks(xMovement: 0, x: 512, y: bottomEdge)
+            createFireworks(xMovement: -200, x: 512 - 200, y: bottomEdge)
+            createFireworks(xMovement: -100, x: 512 - 100, y: bottomEdge)
+            createFireworks(xMovement: 100, x: 512 + 200, y: bottomEdge)
+            createFireworks(xMovement: 200, x: 512 + 100, y: bottomEdge)
+        case 2:
+            createFireworks(xMovement: movement, x: leftEdge, y: bottomEdge)
+            createFireworks(xMovement: movement, x: leftEdge, y: bottomEdge + 400)
+            createFireworks(xMovement: movement, x: leftEdge, y: bottomEdge + 300)
+            createFireworks(xMovement: movement, x: leftEdge, y: bottomEdge + 200)
+            createFireworks(xMovement: movement, x: leftEdge, y: bottomEdge + 100)
+        case 3:
+            createFireworks(xMovement: -movement, x: rightEdge, y: bottomEdge)
+            createFireworks(xMovement: -movement, x: rightEdge, y: bottomEdge + 400)
+            createFireworks(xMovement: -movement, x: rightEdge, y: bottomEdge + 300)
+            createFireworks(xMovement: -movement, x: rightEdge, y: bottomEdge + 200)
+            createFireworks(xMovement: -movement, x: rightEdge, y: bottomEdge + 100)
+        default:
+            break
+        }
+        
     }
 }
