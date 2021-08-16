@@ -8,6 +8,9 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    
+    var scoreLabel: SKLabelNode!
+    var launchesLabel: SKLabelNode!
 
     var gameTimer: Timer?
     var fireworks = [SKNode]()
@@ -17,9 +20,15 @@ class GameScene: SKScene {
     var rightEdge =  1024 + 22
     var score = 0 {
         didSet {
-            
+            scoreLabel?.text = "Score: \(score)"
         }
     }
+    var rocketLeft = 0 {
+        didSet {
+            launchesLabel.text = "Launches left: \(rocketLeft)"
+        }
+    }
+
     
     
     override func didMove(to view: SKView) {
@@ -31,6 +40,20 @@ class GameScene: SKScene {
         addChild(background)
         
         gameTimer =  Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
+        
+        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel.position = CGPoint(x: 16, y: 16)
+        scoreLabel.horizontalAlignmentMode = .left
+        addChild(scoreLabel)
+        
+        score = 0
+        
+        launchesLabel = SKLabelNode(fontNamed: "Chalkduster")
+        launchesLabel.position = CGPoint(x: 16, y: 60)
+        launchesLabel.horizontalAlignmentMode = .left
+        addChild(launchesLabel)
+        
+        rocketLeft = 6
     }
     
     @objc func createFireworks(xMovement: CGFloat, x: Int, y: Int) {
@@ -56,7 +79,9 @@ class GameScene: SKScene {
         path.addLine(to: CGPoint(x: xMovement, y: 1000))
         let move = SKAction.follow(path.cgPath, asOffset: true, orientToPath: true, speed: 200)
         
-        node.run(move)
+        node.run(SKAction.sequence([move,
+                                    SKAction.wait(forDuration: 3),
+                                    SKAction.removeFromParent()]))
         
         if let emitter = SKEmitterNode(fileNamed: "fuse") {
             emitter.position = CGPoint(x: 0, y: -22)
@@ -67,6 +92,12 @@ class GameScene: SKScene {
 
     }
     @objc func launchFireworks() {
+        
+        rocketLeft -= 1
+        
+        if rocketLeft == 0 {
+            gameTimer?.invalidate()
+        }
         let movement : CGFloat = 1800
         
         switch Int.random(in: 0...3) {
@@ -166,10 +197,13 @@ class GameScene: SKScene {
             score += 500
         case 3:
             score += 1500
+            rocketLeft += 1
         case 4:
             score += 2500
+            rocketLeft += 2
         case 5:
             score += 4000
+            rocketLeft += 3
         default:
             break
         }
